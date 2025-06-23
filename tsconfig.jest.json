@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["src", "jest.setup.ts"]
+} 
