@@ -2,6 +2,11 @@
 
 Finni Health is a modern, responsive patient management dashboard built with React, Redux Toolkit, TypeScript, and Tailwind CSS. It allows healthcare teams to efficiently manage patient records, track statuses, and streamline onboarding and care processes.
 
+![finni-dashboard](https://github.com/user-attachments/assets/f29d9904-6c40-4c2d-bf0b-fd53518cca04)
+
+
+![finni-add](https://github.com/user-attachments/assets/7ef4cc37-8313-428c-b27c-1b6a442452dd)
+
 ## Features
 
 - **Patient Dashboard:**
