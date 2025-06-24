@@ -1,16 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchPatientById, clearCurrentPatient } from '@/store/patientSlice';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, ArrowLeft, UserIcon, CalendarIcon, MapPinIcon, IdCardIcon } from 'lucide-react';
+import { patientApi } from '@/services/api';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { toast } from '@/hooks/use-toast';
 
 const PatientDetails = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { currentPatient, loading, error } = useAppSelector(state => state.patients);
+  const [open, setOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -28,6 +42,25 @@ const PatientDetails = () => {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const handleDelete = async () => {
+    if (!currentPatient?._id) return;
+    setDeleting(true);
+    try {
+      await patientApi.deletePatient(currentPatient._id);
+      setOpen(false);
+      toast({
+        title: 'Patient Deleted',
+        description: 'The patient was deleted successfully.',
+        variant: 'default',
+      });
+      navigate('/');
+    } catch (err) {
+      alert('Failed to delete patient.');
+    } finally {
+      setDeleting(false);
+    }
   };
 
   if (loading && !currentPatient) {
@@ -125,6 +158,39 @@ const PatientDetails = () => {
               </div>
             </div>
           </section>
+          <div className="flex justify-end pt-4">
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <button
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+                >
+                  Delete Patient
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Delete Patient</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to delete this patient? This action cannot be undone.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <button className="px-4 py-2 rounded-lg border mr-2" disabled={deleting}>
+                      Cancel
+                    </button>
+                  </DialogClose>
+                  <button
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+                    onClick={handleDelete}
+                    disabled={deleting}
+                  >
+                    {deleting ? 'Deleting...' : 'Delete'}
+                  </button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardContent>
       </Card>
     </div>
