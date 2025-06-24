@@ -131,6 +131,3 @@ Tests are located in `src/components/__tests__/` and use Jest with React Testing
 - `src/types/` – TypeScript types
 - `src/lib/` – Validation and utilities
 
-## License
-
-MIT
